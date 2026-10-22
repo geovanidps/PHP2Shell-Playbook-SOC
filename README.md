@@ -1,5 +1,3 @@
-# PHP2Shell-Playbook-de-SOC-e-Detec-o-de-Webshell
-
 # PHP2Shell: Playbook de SOC e Detecção de Webshell
 
 Material defensivo para equipes de SOC e resposta a incidentes identificarem, investigarem e conterem a exploração do **PHP2Shell** (**CVE-2026-109618** e **CVE-2026-109619**), com foco em **execução de comandos e webshells em aplicações web PHP**.
