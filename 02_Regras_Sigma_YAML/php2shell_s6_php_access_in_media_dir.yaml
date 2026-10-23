@@ -1,0 +1,41 @@
+title: PHP2Shell - Acesso a arquivo PHP em diretorio de midia ou cache
+id: 55595b2e-2db0-4b72-9355-18c58db039a6
+name: php2shell_php_access_in_media_dir
+status: experimental
+description: >
+  Requisicao com sucesso a arquivo PHP em diretorios que normalmente guardam apenas midia,
+  cache ou temporarios. Possivel uso de webshell gravado apos exploracao.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.persistence
+  - attack.t1505.003
+logsource:
+  category: webserver
+detection:
+  selection_dir:
+    cs-uri-stem|contains:
+      - '/uploads/'
+      - '/cache/'
+      - '/tmp/'
+      - '/files/'
+      - '/images/'
+      - '/media/'
+  selection_ext:
+    cs-uri-stem|endswith:
+      - '.php'
+      - '.phtml'
+      - '.phar'
+  selection_ok:
+    sc-status: 200
+  condition: selection_dir and selection_ext and selection_ok
+fields:
+  - c-ip
+  - cs-method
+  - cs-uri-stem
+  - sc-status
+falsepositives:
+  - Aplicacoes que servem PHP a partir desses diretorios por design (alguns CMS, instaladores e paineis).
+level: high

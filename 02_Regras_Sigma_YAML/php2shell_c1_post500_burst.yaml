@@ -1,0 +1,27 @@
+title: PHP2Shell - Rajada de POST 500 contra rotas PHP por origem
+id: ce5e7960-e702-46f7-8db7-0e7ec7bcb74b
+name: php2shell_post500_burst
+status: experimental
+description: >
+  Correlacao Sigma: 10 ou mais POST 500 em rotas PHP vindos da mesma origem em 5 minutos.
+  Padrao compativel com tentativas de exploracao que derrubam ou desestabilizam workers.
+  Exige suporte a regras de correlacao do Sigma (especificacao v2) no conversor do seu SIEM.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.initial-access
+  - attack.t1190
+correlation:
+  type: event_count
+  rules:
+    - php2shell_post_http500_php_route
+  group-by:
+    - c-ip
+  timespan: 5m
+  condition:
+    gte: 10
+falsepositives:
+  - Varredura legitima de vulnerabilidades autorizada ou aplicacao com falha recorrente.
+level: medium

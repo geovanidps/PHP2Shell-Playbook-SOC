@@ -1,0 +1,29 @@
+title: PHP2Shell - POST com HTTP 500 em rota PHP
+id: bb48f6b7-8881-4fee-9240-766ddf078273
+name: php2shell_post_http500_php_route
+status: experimental
+description: >
+  Regra-base para agregacao. Um unico evento nao e relevante; use a regra de correlacao C1
+  para alertar quando uma origem gerar muitos POST 500 contra rotas PHP em curto periodo.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.initial-access
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: 'POST'
+    sc-status: 500
+    cs-uri-stem|endswith: '.php'
+  condition: selection
+fields:
+  - c-ip
+  - cs-uri-stem
+  - sc-status
+falsepositives:
+  - Aplicacoes com erros recorrentes. Use limiar e baseline.
+level: low

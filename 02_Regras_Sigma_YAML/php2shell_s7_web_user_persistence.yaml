@@ -1,0 +1,40 @@
+title: PHP2Shell - Persistencia criada pelo usuario do servico web
+id: 2f18dfe3-eaed-4b9f-a8bc-efbb8f8da04f
+name: php2shell_web_user_persistence
+status: experimental
+description: >
+  Usuario do servico web criando conta, cron ou alterando usuarios. Comportamento de
+  pos-exploracao. Ajuste a lista de usuarios ao seu ambiente.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.persistence
+  - attack.t1053.003
+  - attack.t1136.001
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_user:
+    User:
+      - 'www-data'
+      - 'apache'
+      - 'nginx'
+  selection_img:
+    Image|endswith:
+      - '/crontab'
+      - '/useradd'
+      - '/adduser'
+      - '/usermod'
+      - '/at'
+  condition: selection_user and selection_img
+fields:
+  - Computer
+  - User
+  - Image
+  - CommandLine
+falsepositives:
+  - Raros. Investigue todos os casos.
+level: high

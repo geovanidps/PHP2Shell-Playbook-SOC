@@ -1,0 +1,28 @@
+title: PHP2Shell - Erros de PHP seguidos de shell filho de processo web no mesmo host
+id: 848e9590-bc36-464d-bfdd-f47fbd53f155
+name: php2shell_errors_then_shell
+status: experimental
+description: >
+  Correlacao temporal ordenada: erros de memoria ou queda de worker PHP seguidos, em ate 1 hora
+  e no mesmo host, de um shell ou utilitario filho de processo web. Alta confianca de exploracao
+  bem-sucedida. O campo Computer precisa existir (mapeado) nos eventos das duas regras.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.initial-access
+  - attack.t1190
+  - attack.execution
+  - attack.t1059.004
+correlation:
+  type: temporal_ordered
+  rules:
+    - php2shell_php_memory_exhausted_or_worker_crash
+    - php2shell_web_process_spawns_shell
+  group-by:
+    - Computer
+  timespan: 1h
+falsepositives:
+  - Aplicacao com estouro de memoria que tambem chama utilitarios legitimos no mesmo host.
+level: critical

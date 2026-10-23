@@ -1,0 +1,32 @@
+title: PHP2Shell - Estouro de memoria ou queda de worker PHP
+id: 3557698c-8a03-4d1c-8c87-9010185d24df
+name: php2shell_php_memory_exhausted_or_worker_crash
+status: experimental
+description: >
+  Mensagens de memoria esgotada, diagnostico fora de script e queda de worker nos logs de erro
+  do PHP, php-fpm ou do servidor web. Indicador de preparacao do ataque, nao prova de exploracao.
+  O logsource e personalizado: mapeie para a sua fonte de logs de erro do PHP.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.initial-access
+  - attack.t1190
+logsource:
+  category: application
+  product: php
+detection:
+  selection:
+    message|contains:
+      - 'Allowed memory size of'
+      - 'in Unknown on line 0'
+      - 'exited on signal 11'
+      - 'Segmentation fault'
+  condition: selection
+fields:
+  - Computer
+  - message
+falsepositives:
+  - Scripts legitimos que estouram memory_limit. Alerte por frequencia (veja a regra de correlacao C2) e nao por evento isolado.
+level: medium

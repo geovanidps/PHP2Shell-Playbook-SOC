@@ -1,0 +1,48 @@
+title: PHP2Shell - Arquivo PHP gravado por processo web em diretorio de midia ou cache
+id: ae760b21-bb45-4ebd-823c-33b34939c9ed
+name: php2shell_php_file_written_by_web_process
+status: experimental
+description: >
+  Possivel webshell gravado por processo web ou PHP em diretorio que normalmente nao contem
+  codigo executavel (uploads, cache, tmp, files, images, media).
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.persistence
+  - attack.t1505.003
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection_proc:
+    Image|contains:
+      - 'php-fpm'
+      - 'php-cgi'
+      - 'lsphp'
+      - 'frankenphp'
+      - '/apache2'
+      - '/httpd'
+      - '/nginx'
+  selection_file:
+    TargetFilename|endswith:
+      - '.php'
+      - '.phtml'
+      - '.phar'
+  selection_dir:
+    TargetFilename|contains:
+      - '/uploads/'
+      - '/cache/'
+      - '/tmp/'
+      - '/files/'
+      - '/images/'
+      - '/media/'
+  condition: selection_proc and selection_file and selection_dir
+fields:
+  - Computer
+  - Image
+  - TargetFilename
+falsepositives:
+  - Atualizacao de plugins e cache compilado de alguns CMS. Compare o hash do arquivo com o pacote oficial da aplicacao e registre diretorios onde a aplicacao grava PHP por design.
+level: high

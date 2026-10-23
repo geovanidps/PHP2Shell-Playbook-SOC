@@ -1,0 +1,27 @@
+title: PHP2Shell - Rajada de erros de memoria ou queda de worker por host
+id: 10ffc05c-f6ee-4c76-bfab-337941356468
+name: php2shell_php_errors_burst
+status: experimental
+description: >
+  Correlacao Sigma: 5 ou mais erros de memoria esgotada ou quedas de worker PHP no mesmo host em 15 minutos.
+  Indicador de preparacao do ataque. O campo de agrupamento deve existir nos eventos da regra S4
+  apos o mapeamento do seu SIEM.
+references:
+  - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Geovane da Costa Oliveira
+date: 2026-10-22
+tags:
+  - attack.initial-access
+  - attack.t1190
+correlation:
+  type: event_count
+  rules:
+    - php2shell_php_memory_exhausted_or_worker_crash
+  group-by:
+    - Computer
+  timespan: 15m
+  condition:
+    gte: 5
+falsepositives:
+  - Aplicacao legitima com vazamento de memoria ou limite de memoria subdimensionado.
+level: medium
